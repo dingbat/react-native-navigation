@@ -8,7 +8,7 @@ import android.support.design.widget.CoordinatorLayout;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.*;
 import com.reactnativenavigation.R;
 import com.reactnativenavigation.core.RctManager;
 import com.reactnativenavigation.core.objects.Drawer;
@@ -21,6 +21,8 @@ import com.reactnativenavigation.views.ScreenStack;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 public class BottomTabActivity extends BaseReactActivity implements AHBottomNavigation.OnTabSelectedListener {
     private static final String TAG = "BottomTabActivity";
@@ -205,6 +207,12 @@ public class BottomTabActivity extends BaseReactActivity implements AHBottomNavi
         } else {
             mToolbar.setNavUpButton();
         }
+
+        WritableMap eventData = Arguments.createMap();
+        eventData.putInt("position", position);
+        ReactContext reactContext = mReactInstanceManager.getCurrentReactContext();
+        reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                    .emit("worksource.tabChanged", eventData);
     }
 
     public void setTabBadge(ReadableMap params) {
